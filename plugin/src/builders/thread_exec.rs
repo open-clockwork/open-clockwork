@@ -11,7 +11,7 @@ use solana_client::{
     rpc_config::{RpcSimulateTransactionAccountsConfig, RpcSimulateTransactionConfig},
     rpc_custom_error::JSON_RPC_SERVER_ERROR_MIN_CONTEXT_SLOT_NOT_REACHED,
 };
-use solana_geyser_plugin_interface::geyser_plugin_interface::{
+use agave_geyser_plugin_interface::geyser_plugin_interface::{
     GeyserPluginError, Result as PluginResult,
 };
 use solana_program::{

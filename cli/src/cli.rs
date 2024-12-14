@@ -1,4 +1,4 @@
-use clap::{crate_version, Arg, ArgGroup, Command};
+use clap::{Arg, ArgAction, ArgGroup, Command};
 use clockwork_thread_program::state::{SerializableInstruction, Trigger};
 use clockwork_webhook_program::state::HttpMethod;
 use solana_sdk::{pubkey::Pubkey, signature::Keypair};
@@ -147,11 +147,11 @@ pub enum CliCommand {
     },
 }
 
-pub fn app() -> Command<'static> {
+pub fn app() -> Command {
     Command::new("Clockwork")
         .bin_name("clockwork")
         .about("An automation engine for the Solana blockchain")
-        .version(crate_version!())
+        .version(env!("CARGO_PKG_VERSION")) // Use the crate version
         .arg_required_else_help(true)
         .subcommand(
             Command::new("config")
@@ -164,20 +164,20 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("admin")
                                 .long("admin")
-                                .value_name("ADDRESS")
-                                .takes_value(true),
+                                .value_name("ADMIN")
+                                .num_args(1)
                         )
                         .arg(
                             Arg::new("epoch_thread")
                                 .long("epoch_thread")
-                                .value_name("ADDRESS")
-                                .takes_value(true),
+                                .value_name("EPOCH_THREAD")
+                                .num_args(1)
                         )
                         .arg(
                             Arg::new("hasher_thread")
                                 .long("hasher_thread")
-                                .value_name("ADDRESS")
-                                .takes_value(true),
+                                .value_name("HASHER_THREAD")
+                                .num_args(1)
                         )
                         .group(
                             ArgGroup::new("config_settings")
@@ -193,7 +193,8 @@ pub fn app() -> Command<'static> {
                 .arg(
                     Arg::new("schedule")
                         .index(1)
-                        .takes_value(true)
+                        .value_name("SCHEDULE")
+                        .num_args(1)
                         .required(true)
                         .help("The schedule to generate a cron table for"),
                 ),
@@ -209,7 +210,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("worker_id")
                                 .long("worker_id")
                                 .short('w')
-                                .takes_value(true)
+                                .value_name("WORKER_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the worker to create a delegation with"),
                         ),
@@ -222,7 +224,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("amount")
                                 .long("amount")
                                 .short('a')
-                                .takes_value(true)
+                                .value_name("AMOUNT")
+                                .num_args(1)
                                 .required(false)
                                 .help("The number of tokens to deposit"),
                         )
@@ -230,7 +233,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("delegation_id")
                                 .long("delegation_id")
                                 .short('i')
-                                .takes_value(true)
+                                .value_name("DELEGATION_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the delegation to deposit into"),
                         )
@@ -238,7 +242,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("worker_id")
                                 .long("worker_id")
                                 .short('w')
-                                .takes_value(true)
+                                .value_name("WORKER_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the worker"),
                         ),
@@ -251,7 +256,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("delegation_id")
                                 .long("delegation_id")
                                 .short('i')
-                                .takes_value(true)
+                                .value_name("DELEGATION_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the delegation"),
                         )
@@ -259,7 +265,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("worker_id")
                                 .long("worker_id")
                                 .short('w')
-                                .takes_value(true)
+                                .value_name("WORKER_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the worker"),
                         ),
@@ -272,7 +279,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("amount")
                                 .long("amount")
                                 .short('a')
-                                .takes_value(true)
+                                .value_name("AMOUNT")
+                                .num_args(1)
                                 .required(false)
                                 .help("The number of tokens to withdraw"),
                         )
@@ -280,7 +288,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("delegation_id")
                                 .long("delegation_id")
                                 .short('i')
-                                .takes_value(true)
+                                .value_name("DELEGATION_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the delegation to withdraw from"),
                         )
@@ -288,7 +297,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("worker_id")
                                 .long("worker_id")
                                 .short('w')
-                                .takes_value(true)
+                                .value_name("WORKER_ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the worker"),
                         ),
@@ -305,7 +315,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("id")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The label of the thread to lookup (only works if you \
                                 are the signer of that thread)")
@@ -314,7 +325,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("address")
                                 .short('k')
                                 .long("address")
-                                .takes_value(true)
+                                .value_name("ADDRESS")
+                                .num_args(1)
                                 .help("The address of the thread to lookup"),
                         ),
                 )
@@ -326,7 +338,8 @@ pub fn app() -> Command<'static> {
                     Arg::new("mint")
                         .long("mint")
                         .short('m')
-                        .takes_value(true)
+                        .value_name("MINT")
+                        .num_args(1)
                         .required(true)
                         .help("Mint address of network token"),
                 ),
@@ -335,12 +348,12 @@ pub fn app() -> Command<'static> {
             Command::new("localnet")
                 .about("Launch a local Clockwork worker for app development and testing")
                 .arg(
-                    Arg::with_name("bpf_program")
+                    Arg::new("bpf_program")
                         .long("bpf-program")
                         .value_names(&["ADDRESS_OR_KEYPAIR", "BPF_PROGRAM.SO"])
-                        .takes_value(true)
-                        .number_of_values(2)
-                        .multiple(true)
+                        .value_name("BPF_PROGRAM")
+                        .num_args(2)
+                        .action(ArgAction::Append)
                         .help(
                             "Add a BPF program to the genesis configuration. \
                        If the ledger already exists then this parameter is silently ignored. \
@@ -348,52 +361,54 @@ pub fn app() -> Command<'static> {
                         ),
                 )
                 .arg(
-                    Arg::with_name("clone")
-                    .long("clone")
-                    .short('c')
-                    .value_names(&["ADDRESS"])
-                    .takes_value(true)
-                    .number_of_values(1)
-                    .multiple(true)
-                    .help("Copy an account from the cluster referenced by the --url argument the genesis configuration. If the ledger already exists then this parameter is silently ignored")
+                    Arg::new("clone")
+                        .long("clone")
+                        .short('c')
+                        .value_names(&["ADDRESS"])
+                        .value_name("CLONE")
+                        .num_args(1)
+                        .action(ArgAction::Append)
+                        .help("Copy an account from the cluster referenced by the --url argument the genesis configuration. If the ledger already exists then this parameter is silently ignored")
                 )
                 .arg(
-                    Arg::with_name("url")
-                    .long("url")
-                    .short('u')
-                    .value_names(&["URL_OR_MONIKER"])
-                    .takes_value(true)
-                    .number_of_values(1)
-                    .multiple(false)
-                    .help("URL for Solana's JSON RPC or moniker (or their first letter): [mainnet-beta, testnet, devnet, localhost]")
+                    Arg::new("url")
+                        .long("url")
+                        .short('u')
+                        .value_names(&["URL_OR_MONIKER"])
+                        .value_name("URL")
+                        .num_args(1)
+                        .help("URL for Solana's JSON RPC or moniker (or their first letter): [mainnet-beta, testnet, devnet, localhost]")
                 )
-                .arg(Arg::with_name("force_init")
+                .arg(Arg::new("force_init")
                     .long("force-init")
                     .help("Initializes and downloads localnet dependencies")
                 )
                 .arg(
-                Arg::with_name("solana_archive")
-                    .long("solana-archive")
-                    .help("url or local path to the solana archive containing the necessary \
+                    Arg::new("solana_archive")
+                        .long("solana-archive")
+                        .help("url or local path to the solana archive containing the necessary \
                      dependencies such as solana-test-validator. \
                      Can be useful for debugging or testing different versions of solana-test-validator
                      ")
-                    .takes_value(true),
+                    .value_name("SOLANA_ARCHIVE")
+                        .num_args(1),
                 )
                 .arg(
-                Arg::with_name("clockwork_archive")
-                    .long("clockwork-archive")
-                    .help("url or local path to the solana archive containing the necessary \
+                    Arg::new("clockwork_archive")
+                        .long("clockwork-archive")
+                        .help("url or local path to the solana archive containing the necessary \
                      dependencies such as clocwkork-thread-program, etc. \
                      Can be useful for debugging or testing different versions of clockwork releases
                      ")
-                    .takes_value(true),
+                        .value_name("CLOCKWORK_ARCHIVE")
+                        .num_args(1)
+
                 )
                 .arg(
-                    Arg::with_name("dev")
+                    Arg::new("dev")
                         .long("dev")
                         .help("Use development versions of clockwork programs")
-                    )
+                )
         )
         .subcommand(
             Command::new("pool")
@@ -405,7 +420,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("id")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the pool to lookup"),
                         ),
@@ -418,7 +434,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("id")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The ID of the pool to update"),
                         )
@@ -426,7 +443,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("size")
                                 .long("size")
                                 .short('s')
-                                .takes_value(true)
+                                .value_name("SIZE")
+                                .num_args(1)
                                 .required(false)
                                 .help("The size of the pool"),
                         ),
@@ -444,7 +462,7 @@ pub fn app() -> Command<'static> {
                                 .long("name")
                                 .short('n')
                                 .value_name("NAME")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The name of the secret")
                         )
@@ -453,7 +471,7 @@ pub fn app() -> Command<'static> {
                                 .long("delegate")
                                 .short('d')
                                 .value_name("PUBKEY")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The delegate to approve")
                         )
@@ -470,7 +488,7 @@ pub fn app() -> Command<'static> {
                                 .long("word")
                                 .short('w')
                                 .value_name("WORD")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The secret word to securely save")
                         )
@@ -479,7 +497,7 @@ pub fn app() -> Command<'static> {
                                 .long("name")
                                 .short('n')
                                 .value_name("NAME")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The name of the secret")
                         )
@@ -492,7 +510,7 @@ pub fn app() -> Command<'static> {
                                 .long("name")
                                 .short('n')
                                 .value_name("NAME")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The name of the secret")
                         )
@@ -505,7 +523,7 @@ pub fn app() -> Command<'static> {
                                 .long("name")
                                 .short('n')
                                 .value_name("NAME")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The name of the secret")
                         )
@@ -514,7 +532,7 @@ pub fn app() -> Command<'static> {
                                 .long("delegate")
                                 .short('d')
                                 .value_name("PUBKEY")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The delegate to revoke approval from")
                         )
@@ -537,7 +555,7 @@ pub fn app() -> Command<'static> {
                                 .long("id")
                                 .short('i')
                                 .value_name("ID")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The ID of the thread to be created"),
                         )
@@ -546,7 +564,7 @@ pub fn app() -> Command<'static> {
                                 .long("kickoff_instruction")
                                 .short('k')
                                 .value_name("FILEPATH")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("Filepath to a description of the kickoff instruction"),
                         )
@@ -555,7 +573,7 @@ pub fn app() -> Command<'static> {
                                 .long("account")
                                 .short('a')
                                 .value_name("ADDRESS")
-                                .takes_value(true)
+                                .num_args(1)
                                 .help("An account-based trigger"),
                         )
                         .arg(
@@ -563,14 +581,13 @@ pub fn app() -> Command<'static> {
                                 .long("cron")
                                 .short('c')
                                 .value_name("SCHEDULE")
-                                .takes_value(true)
+                                .num_args(1)
                                 .help("A cron-based trigger"),
                         )
                         .arg(
                             Arg::new("immediate")
                                 .long("immediate")
                                 .short('m')
-                                .takes_value(false)
                                 .help("An immediate trigger"),
                         )
                         .group(
@@ -584,30 +601,33 @@ pub fn app() -> Command<'static> {
                         .about("Delete a thread")
                         .arg_required_else_help(true)
                         .arg(
-                        Arg::new("id")
-                            .index(1)
-                            .takes_value(true)
-                            .required(false)
-                            .help("The id of the thread to delete"),
-                    ),
+                            Arg::new("id")
+                                .index(1)
+                                .value_name("ID")
+                                .num_args(1)
+                                .required(false)
+                                .help("The id of the thread to delete"),
+                        ),
                 )
                 .subcommand(
                     Command::new("get")
                         .about("Lookup a thread")
                         .arg_required_else_help(true)
                         .arg(
-                        Arg::new("id")
-                            .index(1)
-                            .takes_value(true)
-                            .required(false)
-                            .help("The label of the thread to lookup (only works if you \
+                            Arg::new("id")
+                                .index(1)
+                                .required(false)
+                                .value_name("ID")
+                                .num_args(1)
+                                .help("The label of the thread to lookup (only works if you \
                                 are the signer of that thread)")
                         )
                         .arg(
                             Arg::new("address")
                                 .short('k')
                                 .long("address")
-                                .takes_value(true)
+                                .value_name("ADDRESS")
+                                .num_args(1)
                                 .help("The address of the thread to lookup"),
                         )
                 )
@@ -616,18 +636,20 @@ pub fn app() -> Command<'static> {
                         .about("Pause a thread")
                         .arg_required_else_help(true)
                         .arg(
-                        Arg::new("id")
-                            .index(1)
-                            .takes_value(true)
-                            .required(false)
-                            .help("The id of the thread to pause"),
-                    ),
+                            Arg::new("id")
+                                .index(1)
+                                .value_name("ID")
+                                .num_args(1)
+                                .required(false)
+                                .help("The id of the thread to pause"),
+                        ),
                 )
                 .subcommand(
                     Command::new("resume").about("Resume a thread").arg(
                         Arg::new("id")
                             .index(1)
-                            .takes_value(true)
+                            .value_name("ID")
+                            .num_args(1)
                             .required(false)
                             .help("The id of the thread to resume"),
                     ),
@@ -636,8 +658,9 @@ pub fn app() -> Command<'static> {
                     Command::new("reset").about("Reset a thread").arg(
                         Arg::new("id")
                             .index(1)
-                            .takes_value(true)
                             .required(false)
+                            .value_name("ID")
+                            .num_args(1)
                             .help("The id of the thread to stop"),
                     ),
                 )
@@ -648,7 +671,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("id")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("ID")
+                                .num_args(1)
                                 .required(false)
                                 .help("The id of the thread to lookup"),
                         )
@@ -656,7 +680,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("rate_limit")
                                 .long("rate_limit")
                                 .short('r')
-                                .takes_value(true)
+                                .value_name("RATE_LIMIT")
+                                .num_args(1)
                                 .required(false)
                                 .help(
                                     "The maximum number of instructions this thread can execute per slot",
@@ -666,7 +691,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("schedule")
                                 .long("schedule")
                                 .short('s')
-                                .takes_value(true)
+                                .value_name("SCHEDULE")
+                                .num_args(1)
                                 .required(false)
                                 .help("The cron schedule of the thread"),
                         ),
@@ -695,7 +721,7 @@ pub fn app() -> Command<'static> {
                                 .long("body")
                                 .short('b')
                                 .value_name("VALUE")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(false)
                                 .help("The body of the request")
                         )
@@ -704,7 +730,7 @@ pub fn app() -> Command<'static> {
                                 .long("id")
                                 .short('i')
                                 .value_name("ID")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The id of the webhook")
                         )
@@ -713,8 +739,8 @@ pub fn app() -> Command<'static> {
                                 .long("method")
                                 .short('m')
                                 .value_name("GET|POST")
-                                .takes_value(true)
                                 .required(true)
+                                .num_args(1)
                                 .help("The http method to use")
                         )
                         .arg(
@@ -722,7 +748,7 @@ pub fn app() -> Command<'static> {
                                 .long("url")
                                 .short('u')
                                 .value_name("URL")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The url to send the webhook to")
                         )
@@ -735,7 +761,7 @@ pub fn app() -> Command<'static> {
                                 .long("id")
                                 .short('i')
                                 .value_name("ID")
-                                .takes_value(true)
+                                .num_args(1)
                                 .required(true)
                                 .help("The id of the webhook")
                         )
@@ -751,7 +777,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("signatory_keypair")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("SIGNATORY_KEYPAIR")
+                                .num_args(1)
                                 .required(true)
                                 .help("Filepath to the worker's signatory keypair"),
                         ),
@@ -762,7 +789,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("id")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("ID")
+                                .num_args(1)
                                 .required(true)
                                 .help("The ID of the worker to lookup"),
                         ),
@@ -773,7 +801,8 @@ pub fn app() -> Command<'static> {
                         .arg(
                             Arg::new("id")
                                 .index(1)
-                                .takes_value(true)
+                                .value_name("ID")
+                                .num_args(1)
                                 .required(true)
                                 .help("The ID of the worker to edit"),
                         )
@@ -781,7 +810,8 @@ pub fn app() -> Command<'static> {
                             Arg::new("signatory_keypair")
                                 .long("signatory_keypair")
                                 .short('k')
-                                .takes_value(true)
+                                .value_name("SIGNATORY_KEYPAIR")
+                                .num_args(1)
                                 .required(false)
                                 .help("Filepath to the worker's new signatory keypair"),
                         ),

@@ -1,6 +1,4 @@
 use {
-    crate::deps::ToTagVersion,
-    clap::crate_version,
     solana_sdk::commitment_config::CommitmentConfig,
     std::{
         env,
@@ -13,8 +11,6 @@ use {
 pub const DEFAULT_RPC_TIMEOUT_SECONDS: Duration = Duration::from_secs(30);
 pub const DEFAULT_CONFIRM_TX_TIMEOUT_SECONDS: Duration = Duration::from_secs(5);
 pub const RELAYER_URL: &str = "http://localhost:8000/";
-pub const CLOCKWORK_RELEASE_BASE_URL: &str =
-    "https://github.com/clockwork-xyz/clockwork/releases/download";
 pub const CLOCKWORK_BIN_LOCAL: &str = "/bin/clockwork";
 pub const CLOCKWORK_DEPS: &[&str] = &[
     "clockwork_network_program.so",
@@ -52,7 +48,7 @@ impl CliConfig {
             rpc_timeout: DEFAULT_RPC_TIMEOUT_SECONDS,
             commitment: CommitmentConfig::confirmed(),
             confirm_transaction_initial_timeout: DEFAULT_CONFIRM_TX_TIMEOUT_SECONDS,
-            active_version: crate_version!().to_owned().to_tag_version(),
+            active_version: env!("CARGO_PKG_VERSION").to_owned(), // Updated here
             dev: false,
         }
     }
@@ -153,7 +149,7 @@ impl CliConfig {
             .to_owned()
     }
 
-    pub fn clockwork_release_url(tag: &str) -> String {
+    pub fn clockwork_release_url(_tag: &str) -> String {
         // format!(
         //     "{}/{}/{}",
         //     CLOCKWORK_RELEASE_BASE_URL,

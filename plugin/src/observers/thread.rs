@@ -10,7 +10,7 @@ use clockwork_cron::Schedule;
 use clockwork_thread_program::state::{Trigger, TriggerContext, Equality, VersionedThread};
 use log::info;
 use pyth_sdk_solana::PriceFeed;
-use solana_geyser_plugin_interface::geyser_plugin_interface::{
+use agave_geyser_plugin_interface::geyser_plugin_interface::{
     GeyserPluginError, Result as PluginResult,
 };
 use solana_program::{clock::Clock, pubkey::Pubkey};

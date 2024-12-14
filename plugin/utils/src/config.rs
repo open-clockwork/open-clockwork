@@ -3,7 +3,7 @@ use {
         Serialize,
         Deserialize
     },
-    solana_geyser_plugin_interface::geyser_plugin_interface::{
+    agave_geyser_plugin_interface::geyser_plugin_interface::{
         GeyserPluginError, Result as PluginResult,
     },
     std::{fs::File, path::Path},

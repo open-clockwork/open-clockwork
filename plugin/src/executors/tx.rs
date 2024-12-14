@@ -1,5 +1,4 @@
 use std::{
-    any::{self, Any},
     collections::{HashMap, HashSet},
     fmt::Debug,
     sync::{
@@ -19,7 +18,7 @@ use solana_client::{
     tpu_client::TpuClientConfig,
 };
 
-use solana_geyser_plugin_interface::geyser_plugin_interface::{
+use agave_geyser_plugin_interface::geyser_plugin_interface::{
     GeyserPluginError, Result as PluginResult,
 };
 use solana_program::pubkey::Pubkey;

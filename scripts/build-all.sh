@@ -98,7 +98,7 @@ done
 # Build programs
 (
   set -x
-  anchor build --arch sbf
+  anchor build -- --arch sbfv2
 )
 
 # Define lib extension

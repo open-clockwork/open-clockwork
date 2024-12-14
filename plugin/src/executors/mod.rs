@@ -16,7 +16,7 @@ use solana_client::{
     client_error::{ClientError, ClientErrorKind, Result as ClientResult},
     nonblocking::rpc_client::RpcClient,
 };
-use solana_geyser_plugin_interface::geyser_plugin_interface::Result as PluginResult;
+use agave_geyser_plugin_interface::geyser_plugin_interface::Result as PluginResult;
 use solana_sdk::commitment_config::CommitmentConfig;
 use tokio::runtime::Runtime;
 use tx::TxExecutor;

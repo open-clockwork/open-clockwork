@@ -5,7 +5,6 @@ use {
         Result,
     },
     bzip2::read::BzDecoder,
-    clap::crate_version,
     indicatif::{
         ProgressBar,
         ProgressStyle,
@@ -38,7 +37,7 @@ pub fn download_deps(
     dev: bool,
 ) -> Result<()> {
     let solana_tag = env!("GEYSER_INTERFACE_VERSION").to_owned().to_tag_version();
-    let clockwork_tag = crate_version!().to_owned().to_tag_version();
+    let clockwork_tag = env!("CARGO_PKG_VERSION").to_owned();
 
     // Create the version directory if it does not exist
     let active_runtime = &runtime_dir.join(&clockwork_tag);
@@ -102,8 +101,8 @@ fn download_file(url: &str, dest: &Path) -> Result<()> {
 
             let pb = ProgressBar::new(response.content_length().unwrap_or(0));
             pb.set_style(ProgressStyle::default_bar()
-                .template("{spinner:.green} 🚚 [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")
-                .progress_chars("#>-"));
+                .template("{spinner:.green} 🚚 [{elapsed_precise}] [{bar:40.cyan/blue}] {bytes}/{total_bytes} ({eta})")?
+            );
 
             let mut source = pb.wrap_read(response);
 

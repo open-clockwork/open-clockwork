@@ -16,8 +16,8 @@ fn main() {
     let geyser_interface_version = metadata
         .packages
         .iter()
-        .find(|p| p.name == "solana-geyser-plugin-interface")
-        .expect("Unable to parse solana-geyser-plugin-interface version using cargo metadata")
+        .find(|p| p.name == "agave-geyser-plugin-interface")
+        .expect("Unable to parse agave-geyser-plugin-interface version using cargo metadata")
         .version
         .to_string();
     println!(

@@ -6,7 +6,7 @@ use clockwork_relayer_api::Relay;
 use log::info;
 use reqwest::header::CONTENT_TYPE;
 use solana_client::nonblocking::rpc_client::RpcClient;
-use solana_geyser_plugin_interface::geyser_plugin_interface::Result as PluginResult;
+use agave_geyser_plugin_interface::geyser_plugin_interface::Result as PluginResult;
 
 use crate::config::PluginConfig;
 

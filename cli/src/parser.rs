@@ -44,8 +44,8 @@ fn parse_bpf_command(matches: &ArgMatches) -> Result<CliCommand, CliError> {
     let mut program_infos = Vec::<ProgramInfo>::new();
     let mut clone_addresses = Vec::<Pubkey>::new();
 
-    if let Some(values) = matches.values_of("bpf_program") {
-        let values: Vec<&str> = values.collect::<Vec<_>>();
+    if let Some(values) = matches.get_many::<String>("bpf_program") {
+        let values: Vec<String> = values.cloned().collect();
         for address_program in values.chunks(2) {
             match address_program {
                 [address, program] => {
@@ -73,8 +73,8 @@ fn parse_bpf_command(matches: &ArgMatches) -> Result<CliCommand, CliError> {
         }
     }
 
-    if let Some(values) = matches.values_of("clone") {
-        let values: Vec<&str> = values.collect::<Vec<_>>();
+    if let Some(values) = matches.get_many::<String>("clone") {
+        let values: Vec<String> = values.cloned().collect();
         for value in values {
             let address = value
                 .parse::<Pubkey>()
@@ -88,10 +88,10 @@ fn parse_bpf_command(matches: &ArgMatches) -> Result<CliCommand, CliError> {
         clone_addresses,
         network_url: parse_string("url", matches).ok(),
         program_infos,
-        force_init: matches.is_present("force_init"),
+        force_init: matches.get_flag("force_init"),
         solana_archive: parse_string("solana_archive", matches).ok(),
         clockwork_archive: parse_string("clockwork_archive", matches).ok(),
-        dev: matches.is_present("dev"),
+        dev: matches.get_flag("dev"),
     })
 }
 
@@ -281,23 +281,24 @@ fn parse_worker_command(matches: &ArgMatches) -> Result<CliCommand, CliError> {
 // Arg parsers
 
 fn parse_trigger(matches: &ArgMatches) -> Result<Trigger, CliError> {
-    if matches.is_present("account") {
+    if matches.contains_id("account") {
         return Ok(Trigger::Account {
-            address: parse_pubkey("address", matches)?,
+            address: parse_pubkey("account", matches)?,
             offset: 0, // TODO
             size: 32,  // TODO
         });
-    } else if matches.is_present("cron") {
+    } else if matches.contains_id("cron") {
         return Ok(Trigger::Cron {
             schedule: parse_string("cron", matches)?,
             skippable: true,
         });
-    } else if matches.is_present("now") {
+    } else if matches.contains_id("now") {
         return Ok(Trigger::Now);
     }
 
     Err(CliError::BadParameter("trigger".into()))
 }
+
 
 fn parse_instruction_file(
     arg: &str,
@@ -327,8 +328,8 @@ fn parse_pubkey(arg: &str, matches: &ArgMatches) -> Result<Pubkey, CliError> {
 
 fn parse_string(arg: &str, matches: &ArgMatches) -> Result<String, CliError> {
     Ok(matches
-        .value_of(arg)
-        .ok_or(CliError::BadParameter(arg.into()))?
+        .get_one::<String>(arg)
+        .ok_or_else(|| CliError::BadParameter(arg.into()))?
         .to_string())
 }
 

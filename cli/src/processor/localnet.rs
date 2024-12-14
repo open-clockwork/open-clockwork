@@ -9,7 +9,6 @@ use {
         InstructionData, ToAccountMetas,
     },
     anyhow::{Context, Result},
-    clap::crate_version,
     clockwork_network_program::state::{Config, ConfigSettings, Registry},
     clockwork_thread_program::state::{Thread, Trigger},
     solana_sdk::{
@@ -338,7 +337,7 @@ fn start_test_validator(
     let mut process = cmd
         .spawn()
         .context(format!("solana-test-validator command: {:#?}", cmd))?;
-    print_status!("Running", "Clockwork Validator {}\n", crate_version!());
+    print_status!("Running", "Clockwork Validator {}\n", env!("CARGO_PKG_VERSION").to_owned());
 
     // Wait for the validator to become healthy
     let ms_wait = 10_000;

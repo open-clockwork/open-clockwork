@@ -19,5 +19,5 @@ cpi = ["no-entrypoint"]
 idl-build = ["anchor-lang/idl-build"]
 
 [dependencies]
-anchor-lang = "0.30.0"
+anchor-lang = { git = "https://github.com/coral-xyz/anchor", rev = "0453672" }
 clockwork-anchor-gen = { version = "0.3.2", features = ["compat-program-result"] }

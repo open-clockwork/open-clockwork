@@ -2,7 +2,7 @@ pub mod config {
     pub use clockwork_plugin_utils::PluginConfig;
 }
 
-use solana_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin;
+use agave_geyser_plugin_interface::geyser_plugin_interface::GeyserPlugin;
 
 mod builders;
 
